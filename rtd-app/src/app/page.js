@@ -32,7 +32,12 @@ export default function Home() {
       {pokeData ? (
         <>
           <h2>{pokeData.name}</h2>
-          <img src={pokeData.sprites.front_default} alt={pokeData.name} />
+          <img
+            src={pokeData.sprites.front_default}
+            alt={pokeData.name}
+            width="200" // Set the desired width (e.g., 200px)
+            height="200" // Set the desired height (e.g., 200px)
+          />
         </>
       ) : (
         <p>Loading...</p>
