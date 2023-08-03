@@ -1,18 +1,20 @@
 "use client";
 import Image from 'next/image'
 import styles from './page.module.css'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import { resolve } from 'styled-jsx/css';
+import LineChart from './components/LineChart';
 
 export default function Home() {
-  const [pokeData, setPokeData] = useState(null); // Declare pokeData state variable
-
+  const [stockInfo, setStockInfo] = useState([])
+  
   useEffect(() => {
     async function getInfo() {
       try {
-        const data = await fetch('https://pokeapi.co/api/v2/pokemon/gengar')
-        const jsonData = await data.json()
-        console.log(jsonData)
-        setPokeData(jsonData); // Update pokeData with the fetched data
+        const APIKEY = "wBCpRyekvfACoy0Tp3vICMwoowhEHchb"
+        const data = await fetch(`https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/minute/2023-08-01/2023-08-02?adjusted=true&sort=asc&limit=120&apiKey=${APIKEY}`)
+        const jsonData = await data.json() 
+        setStockInfo(jsonData.results)
       } catch (error) {
         console.error(error)
       }
@@ -21,27 +23,13 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    console.log("Hey my info are", pokeData)
-  }, [pokeData])
+    console.log("Hey now I'm in a state", stockInfo)
+  }, [stockInfo])
 
   return (
     <main className={styles.main}>
-      <h1>PokeApi Real Time Data App</h1>
-      <h2>Indigo Wizard - MLH GHW: Data Week</h2>
-      {/* Check if pokeData is not null before accessing its properties */}
-      {pokeData ? (
-        <>
-          <h2>{pokeData.name}</h2>
-          <img
-            src={pokeData.sprites.front_default}
-            alt={pokeData.name}
-            width="200" // Set the desired width (e.g., 200px)
-            height="200" // Set the desired height (e.g., 200px)
-          />
-        </>
-      ) : (
-        <p>Loading...</p>
-      )}
+      <LineChart />
+        
     </main>
   )
 }
